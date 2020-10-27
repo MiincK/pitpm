@@ -35,7 +35,7 @@ Vue.use(VueAxios, axios);
     v.use(plugin, obj);
 })(Vue);
 
-Vue.$me.apihost = "https://miinc.ru/api/1";
+Vue.$me.apihost = "https://pitpm.miinc.ru/api/1";
 
 /* eslint-disable no-new */
 new Vue({

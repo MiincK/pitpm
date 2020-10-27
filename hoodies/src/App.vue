@@ -58,7 +58,7 @@
         </v-app-bar>
 
         <v-container class="background primary--text" fluid style="margin: 64px 0 30vh 0">
-            <router-view class="background primary--text"></router-view>
+            <router-view class="background primary--text" v-on:cart="cart"></router-view>
         </v-container>
 
         <v-footer align="top" absolute class="primary background--text">
@@ -67,8 +67,8 @@
                 <div class="text-center">admin@example.com</div>
             </div>
             <v-spacer></v-spacer>
-            <div v-for="linkcol in footer_links" :key="linkcol">
-                <v-btn v-for="link in linkcol" :key="link.id" @click="link.action" dense text style="width: 100%">
+            <div v-for="linkcol in footer_links" :key="linkcol.id">
+                <v-btn v-for="link in linkcol.data" :key="link.id" @click="link.action" dense text style="width: 100%">
                     <span class="background--text" style="text-align: left; width: 100%">{{link.text}}</span>
                 </v-btn>
             </div>
@@ -82,41 +82,53 @@ export default {
 
     data: () => ({
         footer_links: [ 
-            [
-                {
-                    id: 1,
-                    action: () => {},
-                    text: "О нас"
-                }, {
-                    id: 2,
-                    action: () => {},
-                    text: "Контакты"
-                },
-            ],[
-                {
-                    id: 1,
-                    action: () => {},
-                    text: "Доставка и оплата"
-                }, {
-                    id: 2,
-                    action: () => {},
-                    text: "Таблица размеров"
-                }, {
-                    id: 3,
-                    action: () => {},
-                    text: "Возврат"
-                }, {
-                    id: 4,
-                    action: () => {},
-                    text: "Политика конфиденциальности"
-                }, {
-                    id: 5,
-                    action: () => {},
-                    text: "Карта сайта"
-                },
-            ],
+            {
+                id: 1,
+                data: [
+                    {
+                        id: 1,
+                        action: () => {},
+                        text: "О нас"
+                    }, {
+                        id: 2,
+                        action: () => {},
+                        text: "Контакты"
+                    },
+                ]
+            }, {
+                id: 2,
+                data: [
+                    {
+                        id: 1,
+                        action: () => {},
+                        text: "Доставка и оплата"
+                    }, {
+                        id: 2,
+                        action: () => {},
+                        text: "Таблица размеров"
+                    }, {
+                        id: 3,
+                        action: () => {},
+                        text: "Возврат"
+                    }, {
+                        id: 4,
+                        action: () => {},
+                        text: "Политика конфиденциальности"
+                    }, {
+                        id: 5,
+                        action: () => {},
+                        text: "Карта сайта"
+                    },
+                ]
+            }
         ]
     }),
+    methods: {
+        cart(id) {
+            // TODO: Add to cart
+        }
+    }
+
 };
 </script>
 
@@ -146,6 +158,10 @@ img.placeholder {
     background: #e6e6e6;
     object-fit: contain;
     padding: 5%;
+}
+
+img.preview {
+    width: 30%;
 }
 
 .container {

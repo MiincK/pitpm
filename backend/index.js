@@ -32,6 +32,10 @@ let SQLINIT = () => mariadb.createConnection({
 	});
 SQLINIT();
 
+const ERRORS = {
+	[404]: {"status": 404, "message": "Not found"},
+}
+
 const port = 8087;
 const API = () => {
 	var router = express.Router();
@@ -39,6 +43,19 @@ const API = () => {
 	router.get('/items', async (req, res) => {
         return res.send(await sql.connection.query('SELECT * FROM item'));
 	});
+
+	router.get('/items/popular', async (req, res) => {
+		let row = await sql.connection.query('SELECT * FROM item LIMIT 4'); // TODO: Return popular instead of first 4
+        return res.send(row);
+	});
+
+	router.get('/items/:id', async (req, res) => {
+		let row = await sql.connection.query('SELECT * FROM item WHERE id=?', req.params.id);
+		if (!row.length) return res.status(404).send(ERRORS[404])
+        return res.send(row[0]);
+	});
+
+	
 
     return router;
 };

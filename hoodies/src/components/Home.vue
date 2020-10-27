@@ -21,9 +21,12 @@
             <span class="text-size--3 text-center"><br/>
                 Актуальные товары
             </span>
-            <div v-for="item in [1, 2, 3, 4]" :key="item" style="width: 17%; margin: 0 4%">
-                <img alt="none" src="@/assets/img/placeholder.png" class="placeholder" style="width: 100%" />
-                <v-btn class="third background--text" style="width: 90%; margin: 5%;">
+            <div v-for="item in popular" :key="item" style="width: 17%; margin: 0 4%">
+                <img alt="none" src="@/assets/img/placeholder.png" class="placeholder" />
+                <div class="text-center text-size--1-5">
+                    {{item.name}}
+                </div>
+                <v-btn class="third background--text" style="width: 90%; margin: 5%;" @click="$router.push({name:'item', params: {id: item.id}})">
                     Подробнее
                 </v-btn>
                 <v-btn class="primary--text secondary" style="width: 90%; margin: 5%;">
@@ -57,6 +60,7 @@
         name: 'Home',
 
         data: () => ({
+            popular: [],
             good_sides: 
             [
                 {
@@ -79,6 +83,14 @@
                 },
             ]
         }),
+        created() {
+            this.axios.get(this.$me.apihost + "/items/popular")
+                .then((res) => {
+                    this.popular = res.data;
+                }).catch((err) => {
+
+                });
+        },
     }
 </script>
 
