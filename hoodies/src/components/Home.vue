@@ -8,7 +8,7 @@
                 <img alt="none" :src="$me.assetshost + '/img/test/home_1.jpg'" style="width: 100%; z-index:-3" />
             </div>
             <div style="width: 20%; position:relative">
-                <img alt="none" :src="$me.assetshost + '/img/test/home_2.jpg'" style="width: 100%; z-index:-3" />
+                <img alt="" :src="$me.assetshost + '/img/test/home_2.jpg'" style="width: 100%; z-index:-3" />
             </div>
                 <div class="text-size--1-5 text-center" style="width: 50%; padding: 0 4%">
                     Создайте стильный образ с нашей коллекцией уютных и мягких толстовок.
@@ -18,9 +18,9 @@
             <span class="text-size--3 text-center"><br/>
                 Наши преимущества
             </span>
-            <div v-for="item in good_sides" :key="item.id" style="width: 21%; margin: 0 6%">
+            <div v-for="item in good_sides" :key="item.id" style="width: 21%; margin: 0 6%" class="text-center">
                 <div :style="'height: ' + item.offset + 'px'"></div>
-                <v-icon class="text-size--5 text-center" style="margin: 10%; width: 80%">{{item.icon}}</v-icon>
+                <img alt="none" :src="$me.assetshost + '/img/test/' + item.icon" style="width: 40%" />
                 <div class="text-size--2 text-center mb-4">
                     {{item.title}}
                 </div>
@@ -59,19 +59,19 @@
             [
                 {
                     id: 1,
-                    icon: 'mdi-tshirt-crew-outline',
+                    icon: 'icon-material.png',
                     title: 'Материалы',
                     desc: 'Мы используем только натуральные и экологически чистые материалы',
                     offset: 0,
                 }, {
                     id: 2,
-                    icon: 'mdi-thumb-up-outline',
+                    icon: 'icon-comfort.png',
                     title: 'Комфорт',
                     desc: 'Мы проектируем и моделируем до тех пор, пока вещь не станет идеальной',
                     offset: 100
                 }, {
                     id: 3,
-                    icon: 'mdi-emoticon-happy-outline',
+                    icon: 'icon-simple.png',
                     title: 'Простота',
                     desc: 'Мы верим, что простота в одежде максимально выражает индивидуальность человека'
                 },
