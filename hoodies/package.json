@@ -10,6 +10,7 @@
     "start": "npm run dev"
   },
   "dependencies": {
+    "@jzolago/vuetify-number-input": "^0.4.0",
     "@mdi/font": "^5.7.55",
     "axios": "^0.21.0",
     "vue": "^2.5.2",

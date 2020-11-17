@@ -1,41 +1,18 @@
 <template>
     <v-container style="max-width: 1200px">
-        <v-row>
-            <img alt="none" src="@/assets/img/placeholder.png" class="placeholder" style="height: 70vh; width: 100%;" />
-        </v-row>
         <v-row class="text1">
-            <div class="left" style="width: 80%">
-                <span class="text-size--2">
-                    Мы создаём универсальную моду
-                </span><br/>
-                <span class="text-size--1-2">
+            <div class="text-size--3" style="width: 70%">
+                Мы создаём универсальную моду
+            </div>
+            <div class="right" style="width: 20%; position: relative; right:0;">
+                <img alt="none" :src="$me.assetshost + '/img/test/home_1.jpg'" style="width: 100%; z-index:-3" />
+            </div>
+            <div style="width: 20%; position:relative">
+                <img alt="none" :src="$me.assetshost + '/img/test/home_2.jpg'" style="width: 100%; z-index:-3" />
+            </div>
+                <div class="text-size--1-5 text-center" style="width: 50%; padding: 0 4%">
                     Создайте стильный образ с нашей коллекцией уютных и мягких толстовок.
-                </span>
-            </div>
-            <div class="right" style="width: 20%">
-                <img alt="none" src="@/assets/img/placeholder.png" class="placeholder" style="width: 100%; height: 70%" />
-            </div>
-        </v-row>
-        <v-divider style="margin: 0 5%"></v-divider>
-        <v-row>
-            <span class="text-size--3 text-center"><br/>
-                Актуальные товары
-            </span>
-            <div v-for="item in popular" :key="item" style="width: 17%; margin: 0 4%">
-                <img alt="none" src="@/assets/img/placeholder.png" class="placeholder" />
-                <div class="text-center text-size--1-5">
-                    {{item.name}}
                 </div>
-                <v-btn class="third background--text" style="width: 90%; margin: 5%;" @click="$router.push({name:'item', params: {id: item.id}})">
-                    Подробнее
-                </v-btn>
-                <v-btn class="primary--text secondary" style="width: 90%; margin: 5%;">
-                    В корзину
-                </v-btn>
-            </div>
-            <v-btn class="third background--text" style="width: 20%; padding: 2%; margin: 0 40%" :to="{ path: '/catalog' }">
-                Перейти в каталог
-            </v-btn>
         </v-row>
         <v-row>
             <span class="text-size--3 text-center"><br/>
@@ -52,6 +29,23 @@
                 </div>
             </div>
         </v-row>
+        <v-row>
+            <span class="text-size--3 text-center"><br/>
+                Актуальные товары
+            </span>
+            <div v-for="item in popular" :key="item" style="width: 17%; margin: 0 4%">
+                <img :alt="item.name" :src="$me.assetshost + '/img/test/' + item.image.replace('$$', '1')" style="width: 100%;" />
+                <v-btn class="third background--text" style="width: 90%; margin: 5%;" @click="$router.push({name:'item', params: {id: item.id}})">
+                    Подробнее
+                </v-btn>
+                <v-btn class="primary--text secondary" style="width: 90%; margin: 5%;">
+                    В корзину
+                </v-btn>
+            </div>
+            <v-btn class="third background--text" style="width: 20%; padding: 2%; margin: 0 40%" :to="{ path: '/catalog' }">
+                Перейти в каталог
+            </v-btn>
+        </v-row>
     </v-container>
 </template>
 
@@ -65,19 +59,19 @@
             [
                 {
                     id: 1,
-                    icon: 'mdi-barley',
+                    icon: 'mdi-tshirt-crew-outline',
                     title: 'Материалы',
                     desc: 'Мы используем только натуральные и экологически чистые материалы',
                     offset: 0,
                 }, {
                     id: 2,
-                    icon: 'mdi-balloon',
+                    icon: 'mdi-thumb-up-outline',
                     title: 'Комфорт',
                     desc: 'Мы проектируем и моделируем до тех пор, пока вещь не станет идеальной',
                     offset: 100
                 }, {
                     id: 3,
-                    icon: 'mdi-adjust',
+                    icon: 'mdi-emoticon-happy-outline',
                     title: 'Простота',
                     desc: 'Мы верим, что простота в одежде максимально выражает индивидуальность человека'
                 },
@@ -100,8 +94,5 @@
     }
     .text1 {
         padding: 10%
-    }
-    .text1 > .left {
-        padding: 10%;
     }
 </style>

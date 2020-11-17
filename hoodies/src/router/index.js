@@ -4,6 +4,7 @@ import Home from '@/components/Home'
 import FAQ from '@/components/FAQ'
 import Catalog from '@/components/Catalog'
 import Item from '@/components/Item'
+import Delivery from '@/components/Delivery'
 
 Vue.use(Router)
 
@@ -21,6 +22,10 @@ export default new Router({
             path: '/faq',
             name: 'faq',
             component: FAQ
+        }, {
+            path: '/delivery',
+            name: 'delivery',
+            component: Delivery
         }, {
             path: '/item/:id',
             name: 'item',

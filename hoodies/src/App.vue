@@ -77,6 +77,8 @@
 </template>
 
 <script>
+var $router = null;
+
 export default {
     name: "App",
 
@@ -87,11 +89,11 @@ export default {
                 data: [
                     {
                         id: 1,
-                        action: () => {},
+                        action() { $router.push({path: '/about'}) },
                         text: "О нас"
                     }, {
                         id: 2,
-                        action: () => {},
+                        action() { $router.push({path: '/contact'}) },
                         text: "Контакты"
                     },
                 ]
@@ -100,29 +102,28 @@ export default {
                 data: [
                     {
                         id: 1,
-                        action: () => {},
+                        action() { $router.push({path: '/delivery'}) },
                         text: "Доставка и оплата"
                     }, {
                         id: 2,
-                        action: () => {},
+                        action() { $router.push({path: '/sizetable'}) },
                         text: "Таблица размеров"
                     }, {
                         id: 3,
-                        action: () => {},
+                        action() { $router.push({path: '/returnpolicy'}) },
                         text: "Возврат"
                     }, {
                         id: 4,
-                        action: () => {},
+                        action() { $router.push({path: '/legal'}) },
                         text: "Политика конфиденциальности"
-                    }, {
-                        id: 5,
-                        action: () => {},
-                        text: "Карта сайта"
-                    },
+                    }
                 ]
             }
         ]
     }),
+    created() {
+        $router = this.$router;
+    },
     methods: {
         cart(id) {
             // TODO: Add to cart
@@ -161,7 +162,7 @@ img.placeholder {
 }
 
 img.preview {
-    width: 30%;
+    width: 50%;
 }
 
 .container {
@@ -200,7 +201,13 @@ footer > div:first-child > div {
 .text-size--1 {
     font-size: 1rem;
 }
+.text-size--0-8 {
+    font-size: 0.8rem;
+}
 .text-center {
     width:100%;
+}
+.text-strike {
+    text-decoration: line-through;
 }
 </style>
