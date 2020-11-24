@@ -46,7 +46,8 @@ const API = () => {
 
 	router.get('/items/multiple', async (req, res) => {
 		let q = req.query.items.split(',');
-        return res.send((await sql.connection.query('SELECT * FROM item')).filter(x => q.indexOf(x.id) !== -1));
+		console.log(q);
+        return res.send((await sql.connection.query('SELECT * FROM item')).filter(x => q.indexOf(x.id.toString()) !== -1));
 	});
 
 	router.get('/items/popular', async (req, res) => {

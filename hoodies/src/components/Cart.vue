@@ -41,7 +41,7 @@
                 return JSON.parse(localStorage['cart'] || "{}");
             },
             cart() {
-                return Object.entries(cartd);
+                return Object.entries(this.cartd);
             }
         }
     }
