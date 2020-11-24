@@ -125,11 +125,17 @@ export default {
         $router = this.$router;
     },
     methods: {
-        cart(id) {
-            // TODO: Add to cart
+        cart(id, count) {
+            if (!localStorage['cart'])
+                localStorage['cart'] = "{}";
+            let cart = JSON.parse(localStorage['cart']);
+            if (!cart[id])
+                cart[id] = count;
+            else
+                cart[id] += count;
+            localStorage['cart'] = JSON.stringify(cart);
         }
     }
-
 };
 </script>
 

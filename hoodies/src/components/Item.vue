@@ -13,7 +13,7 @@
                     {{item.price}} ₽
                 </div>
                 <v-input-number :rules="rules.count" hide-details="auto" v-model="count" label="" required value=1 :min=1></v-input-number>
-                <v-btn class="primary--text secondary" style="width: 100%">
+                <v-btn class="primary--text secondary" style="width: 100%" @click="$emit('cart', item.id, count)">
                     В корзину
                 </v-btn>
             </div>

@@ -44,6 +44,11 @@ const API = () => {
         return res.send(await sql.connection.query('SELECT * FROM item'));
 	});
 
+	router.get('/items/multiple', async (req, res) => {
+		let q = req.query.items.split(',');
+        return res.send((await sql.connection.query('SELECT * FROM item')).filter(x => q.indexOf(x.id) !== -1));
+	});
+
 	router.get('/items/popular', async (req, res) => {
 		let row = await sql.connection.query('SELECT * FROM item LIMIT 4'); // TODO: Return popular instead of first 4
         return res.send(row);

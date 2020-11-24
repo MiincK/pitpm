@@ -5,6 +5,7 @@ import FAQ from '@/components/FAQ'
 import Catalog from '@/components/Catalog'
 import Item from '@/components/Item'
 import Delivery from '@/components/Delivery'
+import Cart from '@/components/Cart'
 
 Vue.use(Router)
 
@@ -26,6 +27,10 @@ export default new Router({
             path: '/delivery',
             name: 'delivery',
             component: Delivery
+        }, {
+            path: '/cart',
+            name: 'cart',
+            component: Cart
         }, {
             path: '/item/:id',
             name: 'item',

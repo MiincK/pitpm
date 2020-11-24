@@ -38,7 +38,7 @@
                 <v-btn class="third background--text" style="width: 90%; margin: 5%;" @click="$router.push({name:'item', params: {id: item.id}})">
                     Подробнее
                 </v-btn>
-                <v-btn class="primary--text secondary" style="width: 90%; margin: 5%;">
+                <v-btn class="primary--text secondary" style="width: 90%; margin: 5%;" @click="$emit('cart', item.id, 1)">
                     В корзину
                 </v-btn>
             </div>
