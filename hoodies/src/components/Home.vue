@@ -1,5 +1,5 @@
 <template>
-    <v-container style="max-width: 1200px">
+    <v-container>
         <v-row class="text1">
             <div class="text-size--3" style="width: 70%">
                 Мы создаём универсальную моду
@@ -33,7 +33,7 @@
             <span class="text-size--3 text-center"><br/>
                 Актуальные товары
             </span>
-            <div v-for="item in popular" :key="item" style="width: 17%; margin: 0 4%">
+            <div v-for="item in popular" :key="item.id" style="width: 17%; margin: 0 4%">
                 <img :alt="item.name" :src="$me.assetshost + '/img/test/' + item.image.replace('$$', '1')" style="width: 100%;" />
                 <v-btn class="third background--text" style="width: 90%; margin: 5%;" @click="$router.push({name:'item', params: {id: item.id}})">
                     Подробнее
@@ -46,46 +46,51 @@
                 Перейти в каталог
             </v-btn>
         </v-row>
+        <v-row>
+            <FAQ/>
+        </v-row>
     </v-container>
 </template>
 
 <script>
-    export default {
-        name: 'Home',
-
-        data: () => ({
-            popular: [],
-            good_sides: 
-            [
-                {
-                    id: 1,
-                    icon: 'icon-material.png',
-                    title: 'Материалы',
-                    desc: 'Мы используем только натуральные и экологически чистые материалы',
-                    offset: 0,
-                }, {
-                    id: 2,
-                    icon: 'icon-comfort.png',
-                    title: 'Комфорт',
-                    desc: 'Мы проектируем и моделируем до тех пор, пока вещь не станет идеальной',
-                    offset: 100
-                }, {
-                    id: 3,
-                    icon: 'icon-simple.png',
-                    title: 'Простота',
-                    desc: 'Мы верим, что простота в одежде максимально выражает индивидуальность человека'
-                },
-            ]
-        }),
-        created() {
-            this.axios.get(this.$me.apihost + "/items/popular")
-                .then((res) => {
-                    this.popular = res.data;
-                }).catch((err) => {
-
-                });
-        },
-    }
+import FAQ from '@/components/FAQ'
+export default {
+    name: 'Home',
+    components: {
+        FAQ
+    },
+    data: () => ({
+        popular: [],
+        good_sides: 
+        [
+            {
+                id: 1,
+                icon: 'icon-material.png',
+                title: 'Материалы',
+                desc: 'Мы используем только натуральные и экологически чистые материалы',
+                offset: 0,
+            }, {
+                id: 2,
+                icon: 'icon-comfort.png',
+                title: 'Комфорт',
+                desc: 'Мы проектируем и моделируем до тех пор, пока вещь не станет идеальной',
+                offset: 100
+            }, {
+                id: 3,
+                icon: 'icon-simple.png',
+                title: 'Простота',
+                desc: 'Мы верим, что простота в одежде максимально выражает индивидуальность человека'
+            },
+        ]
+    }),
+    created() {
+        this.axios.get(this.$me.apihost + "/items/popular")
+            .then((res) => {
+                this.popular = res.data;
+            }).catch((err) => {
+            });
+    },
+}
 </script>
 
 <style scoped>

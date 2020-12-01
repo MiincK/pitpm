@@ -29,7 +29,7 @@
                         <v-checkbox v-model="sizes" label="M" value="8" hide-details class="mt-2"></v-checkbox>
                         <v-checkbox v-model="sizes" label="L" value="16" hide-details class="mt-2"></v-checkbox>
                         <v-checkbox v-model="sizes" label="XL" value="32" hide-details class="mt-2"></v-checkbox>
-                        <v-btn style="width: 100%" class="my-2 primary--text">Таблица размеров</v-btn>
+                        <v-btn style="width: 100%" class="my-4 primary--text" @click="$emit('dialog', 'sizes')">Таблица размеров</v-btn>
                     </div>
                     <div class="text-size--1-2">Коллекции</div>
                     <div class="pl-2 pr-8">
@@ -55,7 +55,7 @@
                         <div class="text-size--1-2 my-2" v-else>
                             {{item.price}} ₽
                         </div>
-                        <v-btn class="primary--text secondary" style="width: 100%">
+                        <v-btn class="primary--text secondary" style="width: 100%"  @click="$emit('cart', item.id, 1)">
                             В корзину
                         </v-btn>
                     </div>

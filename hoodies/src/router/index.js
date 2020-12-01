@@ -5,20 +5,22 @@ import FAQ from '@/components/FAQ'
 import Catalog from '@/components/Catalog'
 import Item from '@/components/Item'
 import Delivery from '@/components/Delivery'
-import Cart from '@/components/Cart'
+import Contact from '@/components/Contact'
+import About from '@/components/About'
+import Return from '@/components/Return'
 
 Vue.use(Router)
 
 export default new Router({
-    routes: [
+    routes: [{
+            path: '/',
+            name: 'home',
+            component: Home
+        }, 
         {
             path: '/catalog',
             name: 'catalog',
             component: Catalog
-        }, {
-            path: '/',
-            name: 'home',
-            component: Home
         }, {
             path: '/faq',
             name: 'faq',
@@ -28,9 +30,17 @@ export default new Router({
             name: 'delivery',
             component: Delivery
         }, {
-            path: '/cart',
-            name: 'cart',
-            component: Cart
+            path: '/contact',
+            name: 'contact',
+            component: Contact
+        }, {
+            path: '/about',
+            name: 'about',
+            component: About
+        }, {
+            path: '/returnpolicy',
+            name: 'returnpolicy',
+            component: Return
         }, {
             path: '/item/:id',
             name: 'item',

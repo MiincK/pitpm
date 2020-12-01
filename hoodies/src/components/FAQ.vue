@@ -5,9 +5,9 @@
         </div>
         <v-item-group class="background">
             <v-sheet
-            class="overflow-y-auto background"
-            max-height="600"
-            >
+                class="overflow-y-auto background"
+                max-height="600"
+                >
                 <v-item
                     v-for="item in faq"
                     :key="item.q"

@@ -49,22 +49,21 @@
                 <v-icon>mdi-heart-outline</v-icon>
             </v-btn>
             <v-btn
-                :to="{ path: '/cart' }"
+                @click="showcart()"
                 icon
                 class="primary--text"
                 >
                 <v-icon>mdi-cart-outline</v-icon>
             </v-btn>
         </v-app-bar>
-
-        <v-container class="background primary--text" fluid style="margin: 64px 0 30vh 0">
-            <router-view class="background primary--text" v-on:cart="cart"></router-view>
+        <v-container class="background primary--text content-div" fluid>
+            <router-view class="background primary--text" style="max-width: 1200px" v-on:cart="cart" v-on:dialog="dialog"></router-view>
         </v-container>
 
         <v-footer align="top" absolute class="primary background--text">
             <div>
-                <div class="text-center">+7 (999) 999-99-99</div>
-                <div class="text-center">admin@example.com</div>
+                <div class="text-center">+7 (911) 516-84-85</div>
+                <div class="text-center">info@hoodies.ru</div>
             </div>
             <v-spacer></v-spacer>
             <div v-for="linkcol in footer_links" :key="linkcol.id">
@@ -73,14 +72,120 @@
                 </v-btn>
             </div>
         </v-footer>
+        <v-row justify="center">
+            <v-dialog
+                v-model="cartDialog"
+                max-width="750"
+                >
+                <v-card
+                    class="background primary--text">
+                    <v-card-title class="headline">
+                        <span>Ваш заказ:</span>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            class="primary--text"
+                            text
+                            @click="cartDialog = false;"
+                        >
+                            Закрыть
+                        </v-btn>
+                    </v-card-title>
+                    <v-card-text>
+                        <Cart ref="cartComponent" v-on:cart="cart"></Cart>
+                    </v-card-text>
+                </v-card>
+            </v-dialog>
+            <v-dialog
+                v-model="sizesDialog"
+                max-width="750"
+                >
+                <v-card
+                    class="background primary--text">
+                    <v-card-title class="headline">
+                        <span>Таблица размеров</span>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            class="primary--text"
+                            text
+                            @click="sizesDialog = false;"
+                        >
+                            Закрыть
+                        </v-btn>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-item-group class="background">
+                            <v-sheet
+                                class="overflow-y-auto background"
+                                max-height="600"
+                                >
+                                <v-item>
+                                    <template v-slot="{ active, toggle }">
+                                        <v-sheet
+                                            class="px-4 pt-4 background"
+                                            tile
+                                            style="cursor: pointer;"
+                                            @click="toggle"
+                                        >
+                                            <a class="text-size--1-5">Размеры женской одежды</a>
+                                            <v-divider></v-divider>
+                                            <v-expand-transition>
+                                                <v-responsive v-if="active">
+                                                    <v-data-table
+                                                        :headers="sizeTable.headers1"
+                                                        :items="sizeTable.items1"
+                                                        hide-default-footer
+                                                        dense
+                                                        class="background">
+                                                    </v-data-table>
+                                                    <v-divider></v-divider>
+                                                </v-responsive>
+                                            </v-expand-transition>
+                                        </v-sheet>
+                                    </template>
+                                </v-item>
+                                <v-item>
+                                    <template v-slot="{ active, toggle }">
+                                        <v-sheet
+                                            class="px-4 pt-4 background"
+                                            tile
+                                            style="cursor: pointer;"
+                                            @click="toggle"
+                                        >
+                                            <a class="text-size--1-5">Размеры мужской одежды</a>
+                                            <v-divider></v-divider>
+                                            <v-expand-transition>
+                                                <v-responsive v-if="active">
+                                                    <v-data-table
+                                                        :headers="sizeTable.headers2"
+                                                        :items="sizeTable.items2"
+                                                        hide-default-footer
+                                                        dense
+                                                        class="background">
+                                                    </v-data-table>
+                                                </v-responsive>
+                                            </v-expand-transition>
+                                        </v-sheet>
+                                    </template>
+                                </v-item>
+                            </v-sheet>
+                        </v-item-group>
+                    </v-card-text>
+                </v-card>
+            </v-dialog>
+        </v-row>
     </v-app>
 </template>
 
 <script>
+import Cart from '@/components/Cart'
 var $router = null;
+var $this = null;
 
 export default {
     name: "App",
+    components: {
+        Cart
+    },
 
     data: () => ({
         footer_links: [ 
@@ -106,7 +211,7 @@ export default {
                         text: "Доставка и оплата"
                     }, {
                         id: 2,
-                        action() { $router.push({path: '/sizetable'}) },
+                        action() { $this.dialog('sizes') },
                         text: "Таблица размеров"
                     }, {
                         id: 3,
@@ -119,21 +224,252 @@ export default {
                     }
                 ]
             }
-        ]
+        ],
+        cartDialog: false,
+        sizesDialog: false,
+        sizeTable: {
+            headers1: [
+                {
+                    text: 'Размер',
+                    value: 'name',
+                    sortable: false,
+                },
+                {
+                    text: 'Грудь (см)',
+                    value: 'chest',
+                    sortable: false,
+                },
+                {
+                    text: 'Талия (см)',
+                    value: 'waist',
+                    sortable: false,
+                },
+                {
+                    text: 'Бёдра (см)',
+                    value: 'hips',
+                    sortable: false,
+                },
+                {
+                    text: 'Российский размер',
+                    value: 'rus_size',
+                    sortable: false,
+                },
+            ],
+            items1: [
+                {
+                    name: 'S',
+                    chest: '81-86',
+                    waist: '58-64',
+                    hips: '86-91',
+                    rus_size: '42-44',
+                },
+                {
+                    name: 'M',
+                    chest: '86-94',
+                    waist: '64-71',
+                    hips: '91-99',
+                    rus_size: '44-46',
+                },
+                {
+                    name: 'L',
+                    chest: '94-99',
+                    waist: '71-79',
+                    hips: '99-104',
+                    rus_size: '46-48',
+                },
+                {
+                    name: 'XL',
+                    chest: '99-107',
+                    waist: '79-86',
+                    hips: '104-112',
+                    rus_size: '48-50',
+                },
+                {
+                    name: '2XL',
+                    chest: '107-117',
+                    waist: '87-94',
+                    hips: '112-119',
+                    rus_size: '50-52',
+                },
+                {
+                    name: '3XL',
+                    chest: '117-122',
+                    waist: '94-102',
+                    hips: '119-124',
+                    rus_size: '52-54',
+                },
+                {
+                    name: '4XL',
+                    chest: '122-127',
+                    waist: '102-107',
+                    hips: '124-129',
+                    rus_size: '54-56',
+                },
+                {
+                    name: '5XL',
+                    chest: '127-132',
+                    waist: '107-112',
+                    hips: '129-134',
+                    rus_size: '56-58',
+                },
+                {
+                    name: '6XL',
+                    chest: '132-137',
+                    waist: '112-117',
+                    hips: '134-139',
+                    rus_size: '58-60',
+                },
+            ],
+            headers2: [
+                {
+                    text: 'Размер',
+                    value: 'name',
+                    sortable: false,
+                },
+                {
+                    text: 'Грудь (см)',
+                    value: 'chest',
+                    sortable: false,
+                },
+                {
+                    text: 'Талия (см)',
+                    value: 'waist',
+                    sortable: false,
+                },
+                {
+                    text: 'Бёдра (см)',
+                    value: 'hips',
+                    sortable: false,
+                },
+                {
+                    text: 'Длина рукава (см)',
+                    value: 'sleeve',
+                    sortable: false,
+                },
+                {
+                    text: 'Российский размер',
+                    value: 'rus_size',
+                    sortable: false,
+                },
+            ],
+            items2: [
+                {
+                    name: '2XS',
+                    chest: '88',
+                    waist: '70',
+                    hips: '92',
+                    sleeve: '59',
+                    rus_size: '44',
+                },
+                {
+                    name: 'XS',
+                    chest: '92',
+                    waist: '76',
+                    hips: '96',
+                    sleeve: '60',
+                    rus_size: '46',
+                },
+                {
+                    name: 'S',
+                    chest: '96',
+                    waist: '82',
+                    hips: '100',
+                    sleeve: '61',
+                    rus_size: '48',
+                },
+                {
+                    name: 'M',
+                    chest: '100',
+                    waist: '88',
+                    hips: '104',
+                    sleeve: '62',
+                    rus_size: '50',
+                },
+                {
+                    name: 'L',
+                    chest: '104',
+                    waist: '94',
+                    hips: '108',
+                    sleeve: '63',
+                    rus_size: '52',
+                },
+                {
+                    name: 'XL',
+                    chest: '108',
+                    waist: '100',
+                    hips: '112',
+                    sleeve: '63',
+                    rus_size: '54',
+                },
+                {
+                    name: '2XL',
+                    chest: '112',
+                    waist: '106',
+                    hips: '116',
+                    sleeve: '64',
+                    rus_size: '56',
+                },
+                {
+                    name: '3XL',
+                    chest: '116-124',
+                    waist: '112-120',
+                    hips: '120-128',
+                    sleeve: '64-65',
+                    rus_size: '58-62',
+                },
+                {
+                    name: '4XL',
+                    chest: '128-132',
+                    waist: '124-128',
+                    hips: '132-134',
+                    sleeve: '66',
+                    rus_size: '64-66',
+                },
+                {
+                    name: '5XL',
+                    chest: '136-140',
+                    waist: '132-136',
+                    hips: '136-138',
+                    sleeve: '66',
+                    rus_size: '68-70',
+                },
+            ],
+        }
     }),
     created() {
         $router = this.$router;
+        $this = this;
     },
     methods: {
-        cart(id, count) {
+        cart(id, count, notify, type=0) {
             if (!localStorage['cart'])
                 localStorage['cart'] = "{}";
             let cart = JSON.parse(localStorage['cart']);
             if (!cart[id])
                 cart[id] = count;
             else
-                cart[id] += count;
+            {
+                if (type == 0)
+                    cart[id] += count;
+                else
+                    cart[id] = count;
+            }
+            if (cart[id] == 0)
+                delete cart[id];
             localStorage['cart'] = JSON.stringify(cart);
+        },
+        dialog(type) {
+            switch(type.toLowerCase())
+            {
+                case 'sizes':
+                    this.sizesDialog = true;
+                    break;
+            }
+        },
+        showcart() {
+            this.cartDialog = true;
+            if (this.$refs.cartComponent)
+                this.$refs.cartComponent.reload();
         }
     }
 };
@@ -155,6 +491,14 @@ span {
     font-family: '__Main', sans-serif !important;
 }
 
+.content-div {
+    margin: 64px 0 30vh 0
+}
+
+.flex {
+    display: flex;
+}
+
 .v-btn {
     text-transform: none;
     font-weight: bold;
@@ -169,6 +513,10 @@ img.placeholder {
 
 img.preview {
     width: 50%;
+}
+
+img.smallpreview {
+    height: 100%
 }
 
 .container {
@@ -215,5 +563,8 @@ footer > div:first-child > div {
 }
 .text-strike {
     text-decoration: line-through;
+}
+.v-input__control > .v-text-field__details {
+    display: none;
 }
 </style>

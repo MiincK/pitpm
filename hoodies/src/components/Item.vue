@@ -1,8 +1,8 @@
 <template>
-    <v-container style="max-width: 1200px;padding: 0 15%" v-if="item">
+    <v-container style="padding: 0 15%" v-if="item">
         <v-row>
             <img :alt="item.name" :src="$me.assetshost + '/img/test/' + item.image.replace('$$', '1')" class="preview"/>
-            <div style="padding: 20px">
+            <div style="padding: 3%; width: 40%">
                 <div class="text-size--2">
                     {{item.name}}
                 </div>
