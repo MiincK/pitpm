@@ -96,6 +96,41 @@
                 </v-card>
             </v-dialog>
             <v-dialog
+                v-model="newItemDialog"
+                max-width="750"
+                >
+                <v-card
+                    class="background primary--text">
+                    <v-card-title class="headline">
+                        <span>Товар добавлен в корзину:</span>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            class="primary--text"
+                            text
+                            @click="newItemDialog = false;"
+                        >
+                            Закрыть
+                        </v-btn>
+                    </v-card-title>
+                    <v-card-text class="background primary--text" v-if="newItem">
+                        <v-flex class="py-1 text-size--1-5" style="width: 100%; height: 64px; align-items:center">
+                            <img :alt="newItem.name" :src="$me.assetshost + '/img/test/' + newItem.image.replace('$$', '1')" class="smallpreview mx-2"/>
+                            <div style="width: 50%">{{newItem.name}}</div>
+                            <v-spacer></v-spacer>
+                        </v-flex>
+                        <v-flex class="py-1 text-size--1-5" style="width: 100%; height: 64px; align-items:center">
+                            <v-spacer></v-spacer>
+                            <v-btn
+                                class="primary background--text"
+                                @click="newItemDialog = false; showcart();"
+                                >
+                                Перейти в корзину
+                            </v-btn>
+                        </v-flex>
+                    </v-card-text>
+                </v-card>
+            </v-dialog>
+            <v-dialog
                 v-model="sizesDialog"
                 max-width="750"
                 >
@@ -226,7 +261,9 @@ export default {
             }
         ],
         cartDialog: false,
+        newItemDialog: false,
         sizesDialog: false,
+        newItem: null,
         sizeTable: {
             headers1: [
                 {
@@ -456,6 +493,19 @@ export default {
             }
             if (cart[id] == 0)
                 delete cart[id];
+            console.log(type);
+            console.log(count);
+            console.log(notify);
+            if (type == 0 && count > 0 && notify) {
+                this.newItem = null;
+                this.axios.get(this.$me.apihost + "/items/" + id)
+                    .then((res) => {
+                        this.newItem = res.data;
+                        this.newItemDialog = true;
+                    }).catch((err) => {
+
+                    });
+            }
             localStorage['cart'] = JSON.stringify(cart);
         },
         dialog(type) {

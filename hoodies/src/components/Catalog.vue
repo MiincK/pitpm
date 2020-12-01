@@ -55,7 +55,7 @@
                         <div class="text-size--1-2 my-2" v-else>
                             {{item.price}} ₽
                         </div>
-                        <v-btn class="primary--text secondary" style="width: 100%"  @click="$emit('cart', item.id, 1)">
+                        <v-btn class="primary--text secondary" style="width: 100%"  @click="$emit('cart', item.id, 1, !0)">
                             В корзину
                         </v-btn>
                     </div>
