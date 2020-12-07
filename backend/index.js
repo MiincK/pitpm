@@ -3,8 +3,10 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const fs = require('fs');
 const mariadb = require('mariadb');
+const e = require('express');
 
 const log = function() { console.log.apply(undefined, arguments); };
 
@@ -60,7 +62,13 @@ const API = () => {
         return res.send(row[0]);
 	});
 
-	
+	router.post('/cart', async(req, res) => {
+		let data = req.body;
+
+		await sql.connection.query('INSERT INTO orders (fio, email, phone, address, what) VALUES (?, ?, ?, ?, ?)', [data.fio, data.email, data.phone, data.self ? null : data.address, JSON.stringify(data.cart)]);
+
+		res.status(204).end();
+	});
 
     return router;
 };
@@ -68,6 +76,7 @@ const API = () => {
 const app = express();
 app.use(helmet());
 app.use(cookieParser());
+app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan('combined'));
 app.use('/api/1/', API());

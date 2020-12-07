@@ -91,7 +91,7 @@
                         </v-btn>
                     </v-card-title>
                     <v-card-text>
-                        <Cart ref="cartComponent" v-on:cart="cart"></Cart>
+                        <Cart ref="cartComponent" v-on:cart="cart" v-on:showAlert="showAlert" v-on:closeCart="cartDialog = false"></Cart>
                     </v-card-text>
                 </v-card>
             </v-dialog>
@@ -207,6 +207,27 @@
                     </v-card-text>
                 </v-card>
             </v-dialog>
+            <v-dialog
+                v-model="alertDialog"
+                max-width="350"
+                >
+                <v-card>
+                    <v-card-title class="primary--text">
+                        {{alertTitle}}
+                    </v-card-title>
+                    <v-card-text class="text-size--1">{{alertText}}</v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            color="primary"
+                            text
+                            @click="alertDialog = false;"
+                        >
+                            OK
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </v-row>
     </v-app>
 </template>
@@ -260,6 +281,9 @@ export default {
                 ]
             }
         ],
+        alertTitle: "",
+        alertText: "",
+        alertDialog: false,
         cartDialog: false,
         newItemDialog: false,
         sizesDialog: false,
@@ -493,9 +517,6 @@ export default {
             }
             if (cart[id] == 0)
                 delete cart[id];
-            console.log(type);
-            console.log(count);
-            console.log(notify);
             if (type == 0 && count > 0 && notify) {
                 this.newItem = null;
                 this.axios.get(this.$me.apihost + "/items/" + id)
@@ -520,6 +541,15 @@ export default {
             this.cartDialog = true;
             if (this.$refs.cartComponent)
                 this.$refs.cartComponent.reload();
+        },
+        hidecart() {
+            cartDialog=false
+        },
+        showAlert(title, data)
+        {
+            this.alertTitle = title;
+            this.alertText = data;
+            this.alertDialog = true;
         }
     }
 };
@@ -613,8 +643,5 @@ footer > div:first-child > div {
 }
 .text-strike {
     text-decoration: line-through;
-}
-.v-input__control > .v-text-field__details {
-    display: none;
 }
 </style>
