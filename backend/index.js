@@ -14,6 +14,7 @@ var sql = {};
 
 let SQLINIT = () => mariadb.createConnection({
 		host: 'localhost',
+		port: 38643,
 		user:'pitpm',
 		password: 'pitpm_password',
 		database: 'pitpm',

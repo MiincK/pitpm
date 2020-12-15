@@ -22,10 +22,10 @@
                     </div>
                 </v-flex>
                 <v-form v-model="validForm" ref="formCart" style="margin: 0 50px">
-                    <v-text-field v-model="info.fio" :rules="rules.required" label="ФИО"></v-text-field>
-                    <v-text-field v-model="info.email" :rules="rules.required" label="Ваш Email"></v-text-field>
-                    <v-text-field v-model="info.phone" :rules="rules.required" label="Ваш телефон"></v-text-field>
-                    <v-text-field v-if="!info.self" v-model="info.address" :rules="rules.required" label="Адрес"></v-text-field>
+                    <v-text-field v-model="info.fio" :rules="rules.required" placeholder="Иванов Иван Иванович" label="ФИО"></v-text-field>
+                    <v-text-field v-model="info.email" :rules="rules.email" placeholder="email@example.com" label="Ваш Email"></v-text-field>
+                    <v-text-field v-model="info.phone" :rules="rules.phone" placeholder="+79001234567" label="Ваш телефон"></v-text-field>
+                    <v-text-field v-if="!info.self" v-model="info.address" :rules="rules.required" placeholder="ул. Пушкина, дом 1" label="Адрес"></v-text-field>
                     <v-checkbox v-model="info.self" class="mt-4" label="Самовывоз"></v-checkbox>
                     <v-btn class="text-center primary background--text" style="margin: 16px 25%; width: 50%" @click="done">
                         Оформить заказ
@@ -47,7 +47,9 @@
             rules: {
                 count: [value => !!value || "Обязательно", value => parseInt(value) > 0 || "Количество должно быть положительным"],
                 required: [value => !!value || "Обязательно"],
-                address: [value => info.self || !!value || "Обязательно"]
+                address: [value => info.self || !!value || "Обязательно"],
+                email: [value => !value || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || 'Введён некорректный email-адрес'],
+                phone: [value => !value || /^\+7\d{10}$/.test(value) || 'Введён некорректный номер телефона'],
             },
             info: {
                 fio: "",
