@@ -91,6 +91,11 @@ const API = () => {
 			await sql.connection.query('UPDATE orders SET status=? WHERE id=?', [req.body.status, req.params.id]);
 			return s204(res);
 		}
+		if (typeof req.body.track !== 'undefined')
+		{
+			await sql.connection.query('UPDATE orders SET tracking=? WHERE id=?', [req.body.track, req.params.id]);
+			return s204(res);
+		}
 		return ERROR(res, 404);
 	});
 
