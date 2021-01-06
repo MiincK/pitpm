@@ -28,6 +28,7 @@
             </v-form>
             <v-btn class="mx-4 primary background--text" @click="ustatus(3)" v-if="!(item.status - 2) || !(item.status - 1) && !item.address">Пометить как доставленный</v-btn>
             <v-btn class="mx-4 primary background--text" @click="ustatus(4)" v-if="!(item.status - 3)">Завершить заказ</v-btn>
+            <v-btn class="mx-4 primary background--text" @click="ustatus(-1)" v-if="(item.status - 4)">Отменить заказ</v-btn>
         </v-flex>
         <v-divider></v-divider>
     </v-container>
@@ -51,6 +52,7 @@
         },
         methods: {
             status: (s) => ({
+                [-1]: 'Отменён',
                 0: 'Создан',
                 1: 'Обрабатывается',
                 2: 'Отправлен',

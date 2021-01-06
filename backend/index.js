@@ -67,7 +67,7 @@ const API = () => {
 	router.post('/cart', async(req, res) => {
 		let data = req.body;
 
-		await sql.connection.query('INSERT INTO orders (fio, email, phone, address, what, total, comment) VALUES (?, ?, ?, ?, ?)',
+		await sql.connection.query('INSERT INTO orders (fio, email, phone, address, what, total, comment) VALUES (?, ?, ?, ?, ?, ?, ?)',
 			[data.fio, data.email, data.phone, data.self ? null : data.address, JSON.stringify(data.cart), data.total, data.comment]);
 
 		res.status(204).end();
