@@ -9,6 +9,7 @@ import Contact from '@/components/Contact'
 import About from '@/components/About'
 import Return from '@/components/Return'
 import Admin from '@/components/Admin'
+import AdminOrder from '@/components/AdminOrder'
 
 Vue.use(Router)
 
@@ -43,6 +44,10 @@ export default new Router({
             path: '/admin',
             name: 'admin',
             component: Admin
+        }, {
+            path: '/admin/:id',
+            name: 'adminorder',
+            component: AdminOrder
         }, {
             path: '/returnpolicy',
             name: 'returnpolicy',

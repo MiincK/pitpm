@@ -33,6 +33,7 @@ let SQLINIT = () => mariadb.createConnection({
 	});
 SQLINIT();
 
+let s204 = (res) => res.status(204).end();
 let ERROR = (res, code) => res.status(code).send(ERRORS[code]);
 
 const ERRORS = {
@@ -66,8 +67,8 @@ const API = () => {
 	router.post('/cart', async(req, res) => {
 		let data = req.body;
 
-		await sql.connection.query('INSERT INTO orders (fio, email, phone, address, what, comment) VALUES (?, ?, ?, ?, ?)',
-			[data.fio, data.email, data.phone, data.self ? null : data.address, JSON.stringify(data.cart), data.comment]);
+		await sql.connection.query('INSERT INTO orders (fio, email, phone, address, what, total, comment) VALUES (?, ?, ?, ?, ?)',
+			[data.fio, data.email, data.phone, data.self ? null : data.address, JSON.stringify(data.cart), data.total, data.comment]);
 
 		res.status(204).end();
 	});
@@ -80,6 +81,17 @@ const API = () => {
 		let order = (await sql.connection.query('SELECT * FROM orders WHERE id=?', [req.params.id]))[0];
 		if (!order) return ERROR(res, 404);
 		res.send(order);
+	});
+
+	router.put('/orders/:id', async (req, res) => {
+		let order = (await sql.connection.query('SELECT 1 FROM orders WHERE id=?', [req.params.id]))[0];
+		if (!order) return ERROR(res, 404);
+		if (typeof req.body.status !== 'undefined')
+		{
+			await sql.connection.query('UPDATE orders SET status=? WHERE id=?', [req.body.status, req.params.id]);
+			return s204(res);
+		}
+		return ERROR(res, 404);
 	});
 
     return router;

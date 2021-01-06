@@ -12,13 +12,16 @@
             :loading="isLoading"
             class="background">
             <template v-slot:item.total="{ item }">
-                {{ item.total }} р.
+                {{ item.total }} ₽
             </template>
             <template v-slot:item.address="{ item }">
                 {{ item.address ? "Почтой" : "Самовывоз" }}
             </template>
+            <template v-slot:item.status="{ item }">
+                {{ status(item.status) }}
+            </template>
             <template v-slot:item.open="{ item }">
-                <v-btn flat class="primary my-2" @click="open(item.id)">К заказу</v-btn>
+                <v-btn text class="primary my-2" @click="open(item.id)">К заказу</v-btn>
             </template>
         </v-data-table>
     </v-container>
@@ -32,7 +35,6 @@
             headers: [{
                 text: 'Номер заказа',
                 value: 'id',
-                sortable: false,
             }, {
                 text: 'ФИО клиента',
                 value: 'fio',
@@ -50,33 +52,14 @@
                 value: 'address',
                 sortable: false,
             }, {
+                text: 'Статус',
+                value: 'status',
+            }, {
                 text: '',
                 value: 'open',
                 sortable: false
             }],
-            items: [{
-                id: 1,
-                fio: "Иванов Иван Иванович",
-                email: "test@email.com",
-                phone: "+71112223344",
-                address: '12 123 123',
-                what: '[]',
-                comment: 'SALE20',
-                total: 10000,
-                status: 0,
-                tracking: null,
-            }, {
-                id: 2,
-                fio: "Петров Пётр Петрович",
-                email: "test2@email.com",
-                phone: "+75556667788",
-                address: null,
-                what: '[]',
-                comment: 'SALE20',
-                total: 6000,
-                status: 0,
-                tracking: null,
-            }, ]
+            items: []
         }),
         created() {
             this.axios.get(this.$me.apihost + "/orders")
@@ -84,8 +67,21 @@
                     this.items = res.data;
                     this.isLoading = false;
                 }).catch((err) => {
-                    this.$emit("showAlert", "Ошибка", err);
+                    this.showAlert("Ой-ой...", "Произошла какая-то ошибка... Детали:\n" + err);
                 });
+        },
+        methods: {
+            open(id) {
+                this.$router.push({name: 'adminorder', params: {id: id}})
+            },
+            status: (s) => ({
+                0: 'Создан',
+                1: 'Обрабатывается',
+                2: 'Отправлен',
+                3: 'Доставлен',
+                4: 'Завершён'
+            }[s]),
+            
         }
     }
 </script>

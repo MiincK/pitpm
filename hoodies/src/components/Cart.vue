@@ -7,7 +7,7 @@
                     <img :alt="item.name" :src="$me.assetshost + '/img/test/' + item.image.replace('$$', '1')" class="smallpreview mx-2"/>
                     <div style="width: 50%">{{item.name}}</div>
                     <v-input-number class="mx-4" style="width: 30px" :rules="rules.count" hide-details="auto" v-model="item.count" label="" required :value=item.count :min=1 @input="update(item)"></v-input-number>
-                    <div class="ml-4" style="width: 70px">{{item.price * item.count}}р.</div>
+                    <div class="ml-4" style="width: 70px">{{item.price * item.count}} ₽</div>
                     <v-btn icon @click="update(item, 0)">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
@@ -18,7 +18,7 @@
                 <v-flex>
                     <v-spacer></v-spacer>
                     <div class="mr-8 my-4">
-                        Сумма: {{cartfull.reduce((a, e) => a + e.count * e.price, 0)}}р.
+                        Сумма: {{cartfull.reduce((a, e) => a + e.count * e.price, 0)}} ₽
                     </div>
                 </v-flex>
                 <v-form v-model="validForm" ref="formCart" style="margin: 0 50px">
@@ -98,6 +98,7 @@
 
                 var info1 = this.info;
                 info1.cart = cart;
+                info1.total = this.cartfull.reduce((a, e) => a + e.count * e.price, 0);
 
                 this.axios.post(this.$me.apihost + "/cart", info1)
                     .then((res) => {
