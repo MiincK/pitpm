@@ -57,7 +57,7 @@
             </v-btn>
         </v-app-bar>
         <v-container class="background primary--text content-div" fluid>
-            <router-view class="background primary--text" style="max-width: 1200px" v-on:cart="cart" v-on:dialog="dialog"></router-view>
+            <router-view class="background primary--text" style="max-width: 1200px" v-on:cart="cart" v-on:dialog="dialog" v-on:showAlert="showAlert"></router-view>
         </v-container>
 
         <v-footer align="top" absolute class="primary background--text">

@@ -4,9 +4,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const fs = require('fs');
 const mariadb = require('mariadb');
-const e = require('express');
 
 const log = function() { console.log.apply(undefined, arguments); };
 
@@ -35,6 +33,8 @@ let SQLINIT = () => mariadb.createConnection({
 	});
 SQLINIT();
 
+let ERROR = (res, code) => res.status(code).send(ERRORS[code]);
+
 const ERRORS = {
 	[404]: {"status": 404, "message": "Not found"},
 }
@@ -58,17 +58,28 @@ const API = () => {
 	});
 
 	router.get('/items/:id', async (req, res) => {
-		let row = await sql.connection.query('SELECT * FROM item WHERE id=?', req.params.id);
-		if (!row.length) return res.status(404).send(ERRORS[404])
+		let row = await sql.connection.query('SELECT * FROM item WHERE id=?', [req.params.id]);
+		if (!row.length) return ERROR(res, 404);
         return res.send(row[0]);
 	});
 
 	router.post('/cart', async(req, res) => {
 		let data = req.body;
 
-		await sql.connection.query('INSERT INTO orders (fio, email, phone, address, what) VALUES (?, ?, ?, ?, ?)', [data.fio, data.email, data.phone, data.self ? null : data.address, JSON.stringify(data.cart)]);
+		await sql.connection.query('INSERT INTO orders (fio, email, phone, address, what, comment) VALUES (?, ?, ?, ?, ?)',
+			[data.fio, data.email, data.phone, data.self ? null : data.address, JSON.stringify(data.cart), data.comment]);
 
 		res.status(204).end();
+	});
+
+	router.get('/orders', async (req, res) => {
+		res.send((await sql.connection.query('SELECT * FROM orders')));
+	});
+
+	router.get('/orders/:id', async (req, res) => {
+		let order = (await sql.connection.query('SELECT * FROM orders WHERE id=?', [req.params.id]))[0];
+		if (!order) return ERROR(res, 404);
+		res.send(order);
 	});
 
     return router;

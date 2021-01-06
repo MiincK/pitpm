@@ -8,6 +8,7 @@ import Delivery from '@/components/Delivery'
 import Contact from '@/components/Contact'
 import About from '@/components/About'
 import Return from '@/components/Return'
+import Admin from '@/components/Admin'
 
 Vue.use(Router)
 
@@ -38,6 +39,10 @@ export default new Router({
             path: '/about',
             name: 'about',
             component: About
+        }, {
+            path: '/admin',
+            name: 'admin',
+            component: Admin
         }, {
             path: '/returnpolicy',
             name: 'returnpolicy',

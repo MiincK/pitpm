@@ -27,6 +27,7 @@
                     <v-text-field v-model="info.phone" :rules="rules.phone" placeholder="+79001234567" label="Ваш телефон"></v-text-field>
                     <v-text-field v-if="!info.self" v-model="info.address" :rules="rules.required" placeholder="ул. Пушкина, дом 1" label="Адрес"></v-text-field>
                     <v-checkbox v-model="info.self" class="mt-4" label="Самовывоз"></v-checkbox>
+                    <v-text-field v-model="info.comment" label="Комментарий"></v-text-field>
                     <v-btn class="text-center primary background--text" style="margin: 16px 25%; width: 50%" @click="done">
                         Оформить заказ
                     </v-btn>
@@ -56,6 +57,7 @@
                 email: "",
                 phone: "",
                 address: "",
+                comment: "",
                 self: false,
             },
             validForm: false,
