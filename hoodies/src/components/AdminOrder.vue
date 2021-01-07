@@ -3,10 +3,13 @@
         <div class="text-size--3 text-center my-4">
             Информация о заказе
         </div>
-        <div class="text-size--1-2 px-4 py-4">
-            Номер заказа: {{ item.id }}
+        <div class="text-size--1-2 px-4 pt-4">
+            <b>Номер заказа:</b> {{ item.id }}
         </div>
-        <div v-for="item in cartfull" :key="item.id">
+        <div class="text-size--1-2 px-4 pb-4">
+            <b>Заказ создан:</b> {{ date(item.ordered_at) }}
+        </div>
+        <div v-for="item in cartfull" :key="item.id" class="text-size--1-5">
             <v-flex class="py-1" style="width: 100%; height: 64px; align-items:center" v-if="item.count>0">
                 <img :alt="item.name" :src="$me.assetshost + '/img/test/' + item.image.replace('$$', '1')" class="smallpreview mx-2"/>
                 <div style="width: 50%">{{item.name}}</div>
@@ -14,13 +17,25 @@
             </v-flex>
         </div>
         <div class="text-size--1-2 px-4 py-4">
-            Сумма заказа: {{item.total}} ₽
+            <b>Сумма заказа:</b> {{item.total}} ₽
         </div>
-        <div class="text-size--1-2 px-4 py-4">
-            Доставка: {{ item.address ? "Почтой на адрес " + item.address : "Самовывоз" }}
+        <div class="text-size--1-2 px-4">
+            <b>ФИО получателя:</b> {{ item.fio }}
+        </div>
+        <div class="text-size--1-2 px-4">
+            <b>Email:</b> {{ item.email }}
+        </div>
+        <div class="text-size--1-2 px-4">
+            <b>Номер телефона:</b> {{ item.phone }}
+        </div>
+        <div class="text-size--1-2 px-4" v-if="item.comment">
+            <b>Комментарий к заказу:</b> {{ item.comment }}
+        </div>
+        <div class="text-size--1-2 px-4">
+            <b>Доставка:</b> {{ item.address ? "Почтой на адрес " + item.address : "Самовывоз" }}
         </div>
         <v-flex class="text-size--1-2 px-4 py-4" style="align-items:center;">
-            <span>Статус заказа: {{ status(item.status) }}</span>
+            <span><b>Статус заказа:</b> {{ status(item.status) }}</span>
             <v-btn class="mx-4 primary background--text" @click="ustatus(1)" v-if="!(item.status)">Отправить в обработку</v-btn>
             <v-form v-if="!(item.status - 1) && item.address" ref="frmTrack" v-model="trackValid" style="display:flex;align-items:center;flex: auto;">
                 <v-text-field class="mx-4" label="Трек-номер" :rules="rules.required" v-model="track" />
@@ -28,9 +43,10 @@
             </v-form>
             <v-btn class="mx-4 primary background--text" @click="ustatus(3)" v-if="!(item.status - 2) || !(item.status - 1) && !item.address">Пометить как доставленный</v-btn>
             <v-btn class="mx-4 primary background--text" @click="ustatus(4)" v-if="!(item.status - 3)">Завершить заказ</v-btn>
-            <v-btn class="mx-4 primary background--text" @click="ustatus(-1)" v-if="(item.status - 4)">Отменить заказ</v-btn>
+            <v-btn class="mx-4 primary background--text" @click="ustatus(-1)" v-if="item.status > 0 && (item.status - 4)">Отменить заказ</v-btn>
         </v-flex>
         <v-divider></v-divider>
+        <v-btn class="mx-4 my-4 primary background--text" @click="$router.push({name: 'admin'})">Назад</v-btn>
     </v-container>
 </template>
 
@@ -100,6 +116,10 @@
                     }).catch((err) => {
                         this.$emit("showAlert", "Ой-ой...", "Произошла какая-то ошибка... Детали:\n" + err);
                     });
+            },
+            date(a) {
+                a = new Date(a);
+                return `${a.getUTCDate().toString().padStart(2, '0')}.${(a.getUTCMonth() + 1).toString().padStart(2, '0')}.${a.getUTCFullYear()} ${a.getUTCHours()}:${a.getUTCMinutes()}`
             }
         },
     }
