@@ -65,14 +65,14 @@ const API = () => {
 	});
 
 	router.post('/items', async (req, res) => {
-		let row = await sql.connection.query('INSERT INTO item (name, quantity, price, discounted_price, description)',
-			[req.body.name, req.body.quantity, req.body.price, req.body.discounted_price, req.body.description]);
+		let row = await sql.connection.query('INSERT INTO item (name, quantity, price, discounted_price, description, size)',
+			[req.body.name, req.body.quantity, req.body.price, req.body.discounted_price, req.body.description, req.body.size]);
 		return s204(res);
 	});
 
 	router.put('/items/:id', async (req, res) => {
-		let row = await sql.connection.query('UPDATE item SET name=?, quantity=?, price=?, discounted_price=?, description=? WHERE id=?',
-			[req.body.name, req.body.quantity, req.body.price, req.body.discounted_price, req.body.description, req.params.id]);
+		let row = await sql.connection.query('UPDATE item SET name=?, quantity=?, price=?, discounted_price=?, description=?, size=? WHERE id=?',
+			[req.body.name, req.body.quantity, req.body.price, req.body.discounted_price, req.body.description, req.body.size, req.params.id]);
 		return s204(res);
 	});
 
