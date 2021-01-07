@@ -47,7 +47,7 @@
                 {{ item.address ? "Почтой" : "Самовывоз" }}
             </template>
             <template v-slot:item.image="{ item }">
-                <img :alt="item.name" :src="$me.assetshost + '/img/test/' + item.image.replace('$$', '1')" class="smallpreview mx-2"/>
+                <img :src="$me.assetshost + '/img/test/' + item.image.replace('$$', '1')" class="smallpreview mx-2"/>
             </template>
             <template v-slot:item.open="{ item }">
                 <v-btn text class="primary my-2" @click="edit(item)">Редактировать</v-btn>
