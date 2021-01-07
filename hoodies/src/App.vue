@@ -242,7 +242,6 @@ export default {
     components: {
         Cart
     },
-
     data: () => ({
         footer_links: [ 
             {

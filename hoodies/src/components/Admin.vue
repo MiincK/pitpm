@@ -50,13 +50,48 @@
                 <img :alt="item.name" :src="$me.assetshost + '/img/test/' + item.image.replace('$$', '1')" class="smallpreview mx-2"/>
             </template>
             <template v-slot:item.open="{ item }">
-                <v-btn text class="primary my-2" @click="edit(item.id)">Редактировать</v-btn>
+                <v-btn text class="primary my-2" @click="edit(item)">Редактировать</v-btn>
             </template>
         </v-data-table>
-    </v-container>
+        <v-row justify="center">
+            <v-dialog
+                v-model="editDialog"
+                max-width="750"
+                >
+                <v-card
+                    class="background primary--text">
+                    <v-card-title class="headline">
+                        <span>{{ edited.id > 0 ? "Товар " + edited.id : "Новый товар" }}</span>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            class="primary--text"
+                            text
+                            @click="editDialog = false;"
+                        >
+                            Закрыть
+                        </v-btn>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-form v-model="validEditForm" ref="formEdit" style="margin: 0 50px">
+                            <v-text-field v-model="edited.name" :rules="rules.required" label="Название товара"></v-text-field>
+                            <v-text-field v-model="edited.quantity" :rules="rules.count" label="Количество"></v-text-field>
+                            <v-text-field v-model="edited.price" :rules="rules.price" label="Цена товара"></v-text-field>
+                            <v-text-field v-model="edited.discounted_price" :rules="rules.price_discount" placeholder="Без скидки" label="Цена со скидкой"></v-text-field>
+                            <v-text-field v-model="edited.description" label="Описание"></v-text-field>
+                            <v-btn class="text-center primary background--text" style="margin: 16px 25%; width: 50%" @click="doneEditing">
+                                Сохранить
+                            </v-btn>
+                        </v-form>
+                    </v-card-text>
+                </v-card>
+            </v-dialog>
+        </v-row>
+</v-container>
 </template>
 
 <script>
+var $this = null;
+
     export default {
         name: 'Admin',
         data: () => ({
@@ -120,29 +155,58 @@
                 sortable: false
             }],
             items2: [],
+
+            validEditForm: true,
+            editDialog: false,
+            edited: {},
+            rules: {
+                count: [value => !!value || "Обязательно", value => parseInt(value) >= 0 || "Количество не должно быть отрицательным"],
+                price: [value => !!value || "Обязательно", value => parseInt(value) > 0 || "Цена должна быть положительной"],
+                price_discount: [value => parseInt(value) > 0 || "Цена должна быть положительной", value => parseInt(value) < $this.edited.price || "Цена со скидкой должна быть меньше обычной цены"],
+                required: [value => !!value || "Обязательно"],
+            }
         }),
         created() {
+            $this = this;
             this.axios.get(this.$me.apihost + "/orders")
                 .then((res) => {
                     this.items = res.data;
                     this.isLoading = false;
                 }).catch((err) => {
-                    this.showAlert("Ой-ой...", "Произошла какая-то ошибка... Детали:\n" + err);
+                    this.$emit("showAlert", "Ой-ой...", "Произошла какая-то ошибка... Детали:\n" + err);
                 });
-            this.axios.get(this.$me.apihost + "/items")
-                .then((res) => {
-                    this.items2 = res.data;
-                    this.isLoading2 = false;
-                }).catch((err) => {
-                    this.showAlert("Ой-ой...", "Произошла какая-то ошибка... Детали:\n" + err);
-                });
+            this.reloadItems();
         },
         methods: {
             open(id) {
                 this.$router.push({name: 'adminorder', params: {id: id}})
             },
-            edit(id) {
+            edit(item) {
+                this.edited = item;
+                this.editDialog = true;
+            },
+            doneEditing() {
+                this.$refs.formEdit.validate();
+                if (!this.validEditForm) return;
 
+                if (this.edited.id > 0)
+                    this.axios.put(this.$me.apihost + "/items/" + this.edited.id)
+                        .then((res) => {
+                            this.editDialog = false;
+                            this.$emit("showAlert", "Успех", "Товар успешно сохранён!");
+                            this.reloadItems();
+                        }).catch((err) => {
+                            this.$emit("showAlert", "Ой-ой...", "Произошла какая-то ошибка... Детали:\n" + err);
+                        });
+                else
+                    this.axios.post(this.$me.apihost + "/items")
+                        .then((res) => {
+                            this.editDialog = false;
+                            this.$emit("showAlert", "Успех", "Товар успешно добавлен!");
+                            this.reloadItems();
+                        }).catch((err) => {
+                            this.$emit("showAlert", "Ой-ой...", "Произошла какая-то ошибка... Детали:\n" + err);
+                        });
             },
             status: (s) => ({
                 [-1]: 'Отменён',
@@ -151,7 +215,18 @@
                 2: 'Отправлен',
                 3: 'Доставлен',
                 4: 'Завершён'
-            }[s]),    
+            }[s]),
+            reloadItems(){
+                this.items2 = [];
+                this.isLoading2 = true;
+                this.axios.get(this.$me.apihost + "/items")
+                    .then((res) => {
+                        this.items2 = res.data;
+                        this.isLoading2 = false;
+                    }).catch((err) => {
+                        this.$emit("showAlert", "Ой-ой...", "Произошла какая-то ошибка... Детали:\n" + err);
+                    });
+            }
         }
     }
 </script>
