@@ -65,7 +65,7 @@ const API = () => {
 	});
 
 	router.post('/items', async (req, res) => {
-		let row = await sql.connection.query('INSERT INTO item (name, quantity, price, discounted_price, description, size)',
+		let row = await sql.connection.query('INSERT INTO item (name, quantity, price, discounted_price, description, size) VALUES (?, ?, ?, ?, ?, ?)',
 			[req.body.name, req.body.quantity, req.body.price, req.body.discounted_price, req.body.description, req.body.size]);
 		return s204(res);
 	});
