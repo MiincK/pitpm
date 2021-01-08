@@ -1,7 +1,10 @@
 <template>
     <v-container>
         <div v-if="authorized">
-            <div class="text-size--3 text-center my-4">
+            <v-btn text class="primary--text mt-4" style="width: 100%" @click="logout">
+                Выйти
+            </v-btn>
+            <div class="text-size--3 text-center mb-4">
                 Активные заказы
             </div>
             <v-data-table
@@ -99,7 +102,7 @@
                 </v-dialog>
             </v-row>
         </div>
-        <div v-else style="padding: 30px 30%">
+        <div v-if="!authorized && auth" style="padding: 30px 30%">
             <v-text-field v-model="auth.login" placeholder="admin" label="Логин"></v-text-field>
             <v-text-field v-model="auth.password" placeholder="********" label="Пароль"
                 :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -119,7 +122,7 @@ var $this = null;
         name: 'Admin',
         data: () => ({
             authorized: false,
-            auth: {},
+            auth: null,
             show1: false,
             isLoading: true,
             headers: [{
@@ -199,9 +202,12 @@ var $this = null;
                 this.axios.get(this.$me.apihost + "/auth/" + localStorage['token'])
                     .then((res) => {
                         if (res.data.success) this.authorized = true;
+                        else this.auth = {};
                     }).catch((err) => {
                         this.$emit("showAlert", "Ой-ой...", "Произошла какая-то ошибка... Детали:\n" + err);
+                        this.auth = {};
                     });
+            else this.auth = {};
             this.axios.get(this.$me.apihost + "/orders")
                 .then((res) => {
                     this.items = res.data;
@@ -269,7 +275,7 @@ var $this = null;
                     });
             },
             login() {
-                var token = btoa(this.login + ":::" + this.password);
+                var token = btoa(this.auth.login + ":::" + this.auth.password);
                 this.axios.get(this.$me.apihost + "/auth/" + token)
                     .then((res) => {
                         if (res.data.success)
@@ -283,6 +289,11 @@ var $this = null;
                     }).catch((err) => {
                         this.$emit("showAlert", "Ой-ой...", "Произошла какая-то ошибка... Детали:\n" + err);
                     });
+            },
+            logout() {
+                delete localStorage['token'];
+                this.authorized = false;
+                this.auth = {};
             }
         }
     }

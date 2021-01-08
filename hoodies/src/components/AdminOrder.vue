@@ -64,7 +64,16 @@
             }
         }),
         created() {
-            this.reload();
+            if (localStorage['token'])
+                this.axios.get(this.$me.apihost + "/auth/" + localStorage['token'])
+                    .then((res) => {
+                        if (res.data.success) this.reload();
+                        else this.$router.push({name: 'admin'});
+                    }).catch((err) => {
+                        this.$emit("showAlert", "Ой-ой...", "Произошла какая-то ошибка... Детали:\n" + err);
+                        this.$router.push({name: 'admin'});
+                    });
+            else this.$router.push({name: 'admin'});
         },
         methods: {
             status: (s) => ({
