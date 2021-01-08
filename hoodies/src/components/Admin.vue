@@ -5,7 +5,7 @@
                 Выйти
             </v-btn>
             <div class="text-size--3 text-center mb-4">
-                Активные заказы
+                Заказы
             </div>
             <v-data-table
                 :headers="headers"
@@ -116,7 +116,7 @@
 </template>
 
 <script>
-var $this = null;
+    var $this = null;
 
     export default {
         name: 'Admin',

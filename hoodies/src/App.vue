@@ -272,10 +272,6 @@ export default {
                         id: 3,
                         action() { $router.push({path: '/returnpolicy'}) },
                         text: "Возврат"
-                    }, {
-                        id: 4,
-                        action() { $router.push({path: '/legal'}) },
-                        text: "Политика конфиденциальности"
                     }
                 ]
             }
