@@ -1,103 +1,115 @@
 <template>
     <v-container>
-        <div class="text-size--3 text-center my-4">
-            Активные заказы
-        </div>
-        <v-data-table
-            :headers="headers"
-            :items="items"
-            hide-default-footer
-            :single-select="false"
-            show-select
-            :loading="isLoading"
-            :items-per-page="-1"
-            class="background">
-            <template v-slot:item.total="{ item }">
-                {{ item.total }} ₽
-            </template>
-            <template v-slot:item.address="{ item }">
-                {{ item.address ? "Почтой" : "Самовывоз" }}
-            </template>
-            <template v-slot:item.status="{ item }">
-                {{ status(item.status) }}
-            </template>
-            <template v-slot:item.open="{ item }">
-                <v-btn text class="primary my-2" @click="open(item.id)">К заказу</v-btn>
-            </template>
-        </v-data-table>
-        <div class="text-size--3 text-center my-4">
-            Все товары
-        </div>
-        <v-data-table
-            :headers="headers2"
-            :items="items2"
-            hide-default-footer
-            :single-select="false"
-            show-select
-            :loading="isLoading2"
-            :items-per-page="-1"
-            class="background">
-            <template v-slot:item.price="{ item }">
-                {{ item.price }} ₽
-            </template>
-            <template v-slot:item.discounted_price="{ item }">
-                {{ item.discounted_price || "-" }} ₽
-            </template>
-            <template v-slot:item.address="{ item }">
-                {{ item.address ? "Почтой" : "Самовывоз" }}
-            </template>
-            <template v-slot:item.image="{ item }">
-                <img :src="$me.assetshost + '/img/test/' + item.image.replace('$$', '1')" class="smallpreview mx-2"/>
-            </template>
-            <template v-slot:item.open="{ item }">
-                <v-btn text class="primary my-2" @click="edit(item)">Редактировать</v-btn>
-            </template>
-        </v-data-table>
-        <v-flex>
-            <v-btn text class="primary my-2" @click="edit({id: -1})">Добавить</v-btn>
-        </v-flex>
-        <v-row justify="center">
-            <v-dialog
-                v-model="editDialog"
-                max-width="750"
-                >
-                <v-card
-                    class="background primary--text">
-                    <v-card-title class="headline">
-                        <span>{{ edited.id > 0 ? "Товар " + edited.id : "Новый товар" }}</span>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                            class="primary--text"
-                            text
-                            @click="editDialog = false;"
-                        >
-                            Закрыть
-                        </v-btn>
-                    </v-card-title>
-                    <v-card-text>
-                        <v-form v-model="validEditForm" ref="formEdit" style="margin: 0 50px">
-                            <v-text-field v-model="edited.name" :rules="rules.required" label="Название товара"></v-text-field>
-                            <v-text-field v-model="edited.quantity" :rules="rules.count" label="Количество"></v-text-field>
-                            <v-text-field v-model="edited.price" :rules="rules.price" label="Цена товара"></v-text-field>
-                            <v-text-field v-model="edited.discounted_price" :rules="rules.price_discount" placeholder="Без скидки" label="Цена со скидкой"></v-text-field>
-                            <v-text-field v-model="edited.description" label="Описание"></v-text-field>
-                            <v-flex class="cbflex">
-                                <v-checkbox v-model="editedsizes" label="One size" :value="1" hide-details class="mt-2"></v-checkbox>
-                                <v-checkbox v-model="editedsizes" label="XS" :value="2" hide-details class="mt-2"></v-checkbox>
-                                <v-checkbox v-model="editedsizes" label="S" :value="4" hide-details class="mt-2"></v-checkbox>
-                                <v-checkbox v-model="editedsizes" label="M" :value="8" hide-details class="mt-2"></v-checkbox>
-                                <v-checkbox v-model="editedsizes" label="L" :value="16" hide-details class="mt-2"></v-checkbox>
-                                <v-checkbox v-model="editedsizes" label="XL" :value="32" hide-details class="mt-2"></v-checkbox>
-                            </v-flex>
-                            <v-btn class="text-center primary background--text" style="margin: 16px 25%; width: 50%" @click="doneEditing">
-                                Сохранить
+        <div v-if="authorized">
+            <div class="text-size--3 text-center my-4">
+                Активные заказы
+            </div>
+            <v-data-table
+                :headers="headers"
+                :items="items"
+                hide-default-footer
+                :single-select="false"
+                show-select
+                :loading="isLoading"
+                :items-per-page="-1"
+                class="background">
+                <template v-slot:item.total="{ item }">
+                    {{ item.total }} ₽
+                </template>
+                <template v-slot:item.address="{ item }">
+                    {{ item.address ? "Почтой" : "Самовывоз" }}
+                </template>
+                <template v-slot:item.status="{ item }">
+                    {{ status(item.status) }}
+                </template>
+                <template v-slot:item.open="{ item }">
+                    <v-btn text class="primary my-2" @click="open(item.id)">К заказу</v-btn>
+                </template>
+            </v-data-table>
+            <div class="text-size--3 text-center my-4">
+                Все товары
+            </div>
+            <v-data-table
+                :headers="headers2"
+                :items="items2"
+                hide-default-footer
+                :single-select="false"
+                show-select
+                :loading="isLoading2"
+                :items-per-page="-1"
+                class="background">
+                <template v-slot:item.price="{ item }">
+                    {{ item.price }} ₽
+                </template>
+                <template v-slot:item.discounted_price="{ item }">
+                    {{ item.discounted_price || "-" }} ₽
+                </template>
+                <template v-slot:item.address="{ item }">
+                    {{ item.address ? "Почтой" : "Самовывоз" }}
+                </template>
+                <template v-slot:item.image="{ item }">
+                    <img :src="$me.assetshost + '/img/test/' + item.image.replace('$$', '1')" class="smallpreview mx-2"/>
+                </template>
+                <template v-slot:item.open="{ item }">
+                    <v-btn text class="primary my-2" @click="edit(item)">Редактировать</v-btn>
+                </template>
+            </v-data-table>
+            <v-flex>
+                <v-btn text class="primary my-2" @click="edit({id: -1, discounted_price: null, description: null})">Добавить</v-btn>
+            </v-flex>
+            <v-row justify="center">
+                <v-dialog
+                    v-model="editDialog"
+                    max-width="750"
+                    >
+                    <v-card
+                        class="background primary--text">
+                        <v-card-title class="headline">
+                            <span>{{ edited.id > 0 ? "Товар " + edited.id : "Новый товар" }}</span>
+                            <v-spacer></v-spacer>
+                            <v-btn
+                                class="primary--text"
+                                text
+                                @click="editDialog = false;"
+                            >
+                                Закрыть
                             </v-btn>
-                        </v-form>
-                    </v-card-text>
-                </v-card>
-            </v-dialog>
-        </v-row>
-</v-container>
+                        </v-card-title>
+                        <v-card-text>
+                            <v-form v-model="validEditForm" ref="formEdit" style="margin: 0 50px">
+                                <v-text-field v-model="edited.name" :rules="rules.required" label="Название товара"></v-text-field>
+                                <v-text-field v-model="edited.quantity" :rules="rules.count" label="Количество"></v-text-field>
+                                <v-text-field v-model="edited.price" :rules="rules.price" label="Цена товара"></v-text-field>
+                                <v-text-field v-model="edited.discounted_price" :rules="rules.price_discount" placeholder="Без скидки" label="Цена со скидкой"></v-text-field>
+                                <v-text-field v-model="edited.description" label="Описание"></v-text-field>
+                                <v-flex class="cbflex">
+                                    <v-checkbox v-model="editedsizes" label="One size" :value="1" hide-details class="mt-2"></v-checkbox>
+                                    <v-checkbox v-model="editedsizes" label="XS" :value="2" hide-details class="mt-2"></v-checkbox>
+                                    <v-checkbox v-model="editedsizes" label="S" :value="4" hide-details class="mt-2"></v-checkbox>
+                                    <v-checkbox v-model="editedsizes" label="M" :value="8" hide-details class="mt-2"></v-checkbox>
+                                    <v-checkbox v-model="editedsizes" label="L" :value="16" hide-details class="mt-2"></v-checkbox>
+                                    <v-checkbox v-model="editedsizes" label="XL" :value="32" hide-details class="mt-2"></v-checkbox>
+                                </v-flex>
+                                <v-btn class="text-center primary background--text" style="margin: 16px 25%; width: 50%" @click="doneEditing">
+                                    Сохранить
+                                </v-btn>
+                            </v-form>
+                        </v-card-text>
+                    </v-card>
+                </v-dialog>
+            </v-row>
+        </div>
+        <div v-else style="padding: 30px 30%">
+            <v-text-field v-model="auth.login" placeholder="admin" label="Логин"></v-text-field>
+            <v-text-field v-model="auth.password" placeholder="********" label="Пароль"
+                :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append="show1 = !show1"
+                :type="show1 ? 'text' : 'password'"></v-text-field>
+            <v-btn class="primary background--text" style="width: 100%" @click="login">
+                Войти
+            </v-btn>
+        </div>
+    </v-container>
 </template>
 
 <script>
@@ -106,6 +118,9 @@ var $this = null;
     export default {
         name: 'Admin',
         data: () => ({
+            authorized: false,
+            auth: {},
+            show1: false,
             isLoading: true,
             headers: [{
                 text: '№',
@@ -180,6 +195,13 @@ var $this = null;
         }),
         created() {
             $this = this;
+            if (localStorage['token'])
+                this.axios.get(this.$me.apihost + "/auth/" + localStorage['token'])
+                    .then((res) => {
+                        if (res.data.success) this.authorized = true;
+                    }).catch((err) => {
+                        this.$emit("showAlert", "Ой-ой...", "Произошла какая-то ошибка... Детали:\n" + err);
+                    });
             this.axios.get(this.$me.apihost + "/orders")
                 .then((res) => {
                     this.items = res.data;
@@ -242,6 +264,22 @@ var $this = null;
                     .then((res) => {
                         this.items2 = res.data;
                         this.isLoading2 = false;
+                    }).catch((err) => {
+                        this.$emit("showAlert", "Ой-ой...", "Произошла какая-то ошибка... Детали:\n" + err);
+                    });
+            },
+            login() {
+                var token = btoa(this.login + ":::" + this.password);
+                this.axios.get(this.$me.apihost + "/auth/" + token)
+                    .then((res) => {
+                        if (res.data.success)
+                        {
+                            localStorage['token'] = token;
+                            this.authorized = true;
+                        }
+                        else {
+                            this.$emit("showAlert", "Ой-ой...", res.data.message);
+                        }
                     }).catch((err) => {
                         this.$emit("showAlert", "Ой-ой...", "Произошла какая-то ошибка... Детали:\n" + err);
                     });

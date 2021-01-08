@@ -42,7 +42,7 @@
             </v-col>
             <v-col>
                 <v-row>
-                    <div v-for="item in itemscalc" :key="item.id" style="width: 17%; margin: 0 4%">
+                    <div v-for="item in itemscalc" :key="item.id" style="width: 17%; margin: 10px 4%">
                         <a @click="open(item.id)">
                             <img :alt="item.name" :src="$me.assetshost + '/img/test/' + item.image.replace('$$', '1')" style="width: 100%;" />
                             <div class="text-size--1-5">
@@ -81,7 +81,7 @@
                 .then((res) => {
                     this.items = res.data;
                 }).catch((err) => {
-
+                    this.$emit("showAlert", "Ой-ой...", "Произошла какая-то ошибка... Детали:\n" + err);
                 });
         },
         methods: {

@@ -76,6 +76,19 @@ const API = () => {
 		return s204(res);
 	});
 
+	router.get('/auth/:token', async (req, res) => {
+		let token = req.params.token;
+		let data = Buffer.from(token, 'base64').toString('utf-8');
+		if (data.split(':::').length == 2)
+		{
+			let login = data.split(':::')[0];
+			let password = data.split(':::')[1];
+			if ((await sql.connection.query('SELECT * FROM adminuser WHERE login=? AND password=?', [login, password])).length)
+				return res.status(200).send({success: true, message: ''});
+		}
+		return res.status(200).send({success: false, message: 'Неверный логин или пароль'})
+	});
+
 	router.post('/cart', async(req, res) => {
 		let data = req.body;
 

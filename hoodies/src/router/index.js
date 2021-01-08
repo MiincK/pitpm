@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from '@/components/Home'
 import FAQ from '@/components/FAQ'
 import Catalog from '@/components/Catalog'
+import Favorite from '@/components/Favorite'
 import Item from '@/components/Item'
 import Delivery from '@/components/Delivery'
 import Contact from '@/components/Contact'
@@ -19,11 +20,14 @@ export default new Router({
             path: '/',
             name: 'home',
             component: Home
-        }, 
-        {
+        }, {
             path: '/catalog',
             name: 'catalog',
             component: Catalog
+        }, {
+            path: '/favorites',
+            name: 'favorite',
+            component: Favorite
         }, {
             path: '/faq',
             name: 'faq',
